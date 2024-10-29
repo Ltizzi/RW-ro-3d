@@ -41,7 +41,8 @@ func init_blocks(size:int, pos: Vector3i):
 		for y in range(chunk_size):
 			blocks[x].append([])
 			for z in range(chunk_size):
-				get_parent().getBlock(Vector3i(pos.x + x , pos.y + y, pos.z + z))
+				var block = get_parent().getBlock(Vector3i(pos.x + x , pos.y + y, pos.z + z))
+				blocks[x][y].append(block)
 				#if noise.get_noise_3d(x,y,z) >  threshold:
 					#blocks[x][y].append(BlockType.DIRT)
 				#else:
@@ -69,6 +70,7 @@ func add_triangles():
 	face_count +=1
 	
 func gen_cube_mesh(pos: Vector3):
+	var is_top_block := false
 	
 	if block_is_air(pos + Vector3(0,1,0)):
 	
@@ -80,7 +82,9 @@ func gen_cube_mesh(pos: Vector3):
 		
 		
 		add_triangles()
-		add_uvs(0,0)
+		#add_uvs(0,0)
+		add_uvs(0,1)
+		is_top_block = true
 	
 	if block_is_air(pos + Vector3(1,0,0)):
 
@@ -91,7 +95,11 @@ func gen_cube_mesh(pos: Vector3):
 		vertices.append(pos + Vector3(0.5, -0.5, 0.5))
 
 		add_triangles()
-		add_uvs(3,0)
+		#add_uvs(3,0)
+		if is_top_block:
+			add_uvs(1,1)
+		else:
+			add_uvs(2,1)
 	
 	if block_is_air(pos + Vector3(0,0,1)):
 
@@ -102,7 +110,11 @@ func gen_cube_mesh(pos: Vector3):
 		vertices.append(pos + Vector3(-0.5, -0.5, 0.5))
 
 		add_triangles()
-		add_uvs(4,0)
+		#add_uvs(4,0)
+		if is_top_block:
+			add_uvs(1,1)
+		else:
+			add_uvs(2,1)
 		
 	if block_is_air(pos + Vector3(-1,0,0)):
 
@@ -113,7 +125,11 @@ func gen_cube_mesh(pos: Vector3):
 		vertices.append(pos + Vector3(-0.5, -0.5, -0.5))
 
 		add_triangles()
-		add_uvs(5,0)
+		#add_uvs(5,0)
+		if is_top_block:
+			add_uvs(1,1)
+		else:
+			add_uvs(2,1)
 	
 	if block_is_air(pos + Vector3(0,0,-1)):
 
@@ -124,7 +140,11 @@ func gen_cube_mesh(pos: Vector3):
 		vertices.append(pos + Vector3(0.5, -0.5, -0.5))
 
 		add_triangles()
-		add_uvs(2,0)
+		#add_uvs(2,0)
+		if is_top_block:
+			add_uvs(1,1)
+		else:
+			add_uvs(2,1)
 	
 	
 	if block_is_air(pos + Vector3(0,-1,0)):
@@ -136,7 +156,8 @@ func gen_cube_mesh(pos: Vector3):
 		vertices.append(pos + Vector3(-0.5, -0.5, -0.5))
 
 		add_triangles()
-		add_uvs(1,0)
+		#add_uvs(1,0)
+		add_uvs(2,1)
 		
 
 func gen_chunk():
@@ -150,26 +171,32 @@ func gen_chunk():
 	for x in range(chunk_size):
 		for y in range(chunk_size):
 			for z in range(chunk_size):
-				if(blocks[x][y][z] == BlockType.AIR):
+				if(blocks[x][y][z] == Block.BlockType.AIR):
 					pass
 				else:
 					gen_cube_mesh(Vector3(x,y,z))
 
-	
-	var array = []
-	array.resize(Mesh.ARRAY_MAX)
-	array[Mesh.ARRAY_VERTEX] = vertices
-	array[Mesh.ARRAY_INDEX] = indices
-	array[Mesh.ARRAY_TEX_UV] = uvs
-	a_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, array)
+	if face_count > 0:
+		var array = []
+		array.resize(Mesh.ARRAY_MAX)
+		array[Mesh.ARRAY_VERTEX] = vertices
+		array[Mesh.ARRAY_INDEX] = indices
+		array[Mesh.ARRAY_TEX_UV] = uvs
+		a_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, array)
 	mesh = a_mesh
 	
 func block_is_air(pos:Vector3):
 	if pos.x < 0 or pos.y < 0 or pos.z < 0:
-		return true
+		#return true (para dibujar todo el chunk)
+		#
+		#de este modo solo dibuja la cara superior
+		var block = get_parent().getBlock(pos + position)
+		return block == Block.BlockType.AIR
 	elif pos.x  >= chunk_size or pos.y >= chunk_size or pos.z >= chunk_size:
-		return true
-	elif blocks[pos.x][pos.y][pos.z] == BlockType.AIR:
+		#de este modo solo dibuja la cara superior
+		var block = get_parent().getBlock(pos + position)
+		return block == Block.BlockType.AIR
+	elif blocks[pos.x][pos.y][pos.z] == Block.BlockType.AIR:
 		return true
 	else:
 		return false

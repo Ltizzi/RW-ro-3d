@@ -4,3 +4,8 @@
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_rvim6")
+chunk_size = 16
+world_size = Vector3i(16, 2, 16)
+seed = 755
+noise_frequency = 0.01
+cave_noise_freq = 0.08
