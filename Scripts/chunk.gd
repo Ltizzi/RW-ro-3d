@@ -26,6 +26,7 @@ func _process(delta: float) -> void:
 		#init_blocks(16, Vector3i(0,0,0))
 		#gen_chunk()
 		#update_mesh = false
+	pass
 		
 func init_blocks(size:int, pos: Vector3i):
 	#var rng = RandomNumberGenerator.new()
