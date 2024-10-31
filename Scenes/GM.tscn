@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://cucp74q6x7d1l"]
+
+[ext_resource type="PackedScene" uid="uid://cgmyomods42ej" path="res://Scenes/World.tscn" id="1_yof4p"]
+[ext_resource type="Script" path="res://Scripts/freeLookCam.gd" id="2_pqvgb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_6rrt1"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ufcx7"]
+
+[node name="GM" type="Node3D"]
+
+[node name="World" parent="." instance=ExtResource("1_yof4p")]
+world_size = Vector3i(4, 2, 4)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.0159692, 0, -0.999873, 0, 1, 0, 0.999873, 0, 0.0159692, -7.73454, 24.0978, 28.3786)
+fov = 74.4669
+script = ExtResource("2_pqvgb")
+cam_speed = 15.0
+cam_speed_multiplier = 5.0
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(7.07941, 0, 0, 0, 5.93925, 0, 0, 0, 6.23539, 27.0441, 44.5529, 25.5434)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("SphereMesh_6rrt1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("SphereShape3D_ufcx7")

@@ -183,6 +183,9 @@ func gen_chunk():
 		array[Mesh.ARRAY_INDEX] = indices
 		array[Mesh.ARRAY_TEX_UV] = uvs
 		a_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, array)
+		var trimesh_collisions =  a_mesh.create_trimesh_shape()
+		var collision_shape_3d: CollisionShape3D = find_child("StaticBody3D").find_child("CollisionShape3D")
+		collision_shape_3d.set_shape(trimesh_collisions)
 	mesh = a_mesh
 	
 func block_is_air(pos:Vector3):

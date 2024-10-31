@@ -20,5 +20,7 @@ _surfaces = [{
 material_override = ExtResource("1_bmqoq")
 mesh = SubResource("ArrayMesh_s3ms7")
 script = ExtResource("2_dhj8t")
-threshold = -0.6
-noise_seed = 755
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]

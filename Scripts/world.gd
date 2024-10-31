@@ -19,6 +19,7 @@ var chunk_prototype = preload("res://Scenes/Chunk.tscn")
 
 
 func _ready() -> void:
+	generate_chunks = true
 	#print("generating...")
 	#noise = FastNoiseLite.new()
 	#noise.seed = seed
