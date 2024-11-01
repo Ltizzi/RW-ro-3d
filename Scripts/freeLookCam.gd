@@ -4,6 +4,8 @@ extends Camera3D
 @export_range(5, 28) var cam_speed: float
 @export_range(2,10) var cam_speed_multiplier: float
 
+@onready var world: Node3D = $"../World"
+
 
 var _mouse_position = Vector2(0.0, 0.0)
 var _total_pitch = 0.0
@@ -26,7 +28,7 @@ func _input(event):
 		_mouse_position = event.relative
 	
 	if event.is_action_pressed("click"):
-		#raycast_from_mouse_pos()
+		raycast_from_mouse_pos()
 		pass
 
 func get_inputs():
@@ -56,6 +58,29 @@ func get_inputs():
 	else:
 		velocity.z = 0
 	
+
+func raycast_from_mouse_pos():
+	var mouse_pos = get_viewport().get_mouse_position()
+	var ray_length = 1000
+	var from = project_ray_origin(mouse_pos)
+	var to = from + project_ray_normal(mouse_pos) * ray_length
+	var space = get_world_3d().direct_space_state
+	var ray_query = PhysicsRayQueryParameters3D.new()
+	ray_query.from = from 
+	ray_query.to = to
+	var raycast_result = space.intersect_ray(ray_query)
+	#print(raycast_result)
+	if len(raycast_result) > 0:
+		var hit_pos = raycast_result.position - (raycast_result.normal * 0.5)
+		
+		hit_pos = Vector3i(round(hit_pos.x), round(hit_pos.y), round(hit_pos.z))
+		
+		if Input.is_action_pressed("add_block"):
+			hit_pos += Vector3i(raycast_result.normal)
+			world.setBlockByWorldPosition(hit_pos, Block.BlockType.DIRT)
+		else:
+			world.setBlockByWorldPosition(hit_pos, Block.BlockType.AIR)
+
 
 	
 func apply_movements(delta:float):

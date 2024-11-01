@@ -6,7 +6,6 @@
 [node name="GM" type="Node3D"]
 
 [node name="World" parent="." instance=ExtResource("1_yof4p")]
-seed = 755755
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.0159692, 0, -0.999873, 0, 1, 0, 0.999873, 0, 0.0159692, -7.73454, 24.0978, 28.3786)

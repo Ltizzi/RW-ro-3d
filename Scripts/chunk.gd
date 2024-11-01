@@ -18,6 +18,8 @@ var tex_div := 0.125
 
 var blocks = []
 
+var first_load = true
+
 func _ready() -> void:
 	pass # Replace with function body.
 
@@ -41,13 +43,15 @@ func init_blocks(size:int, pos: Vector3i):
 		for y in range(chunk_size):
 			blocks[x].append([])
 			for z in range(chunk_size):
-				var block = get_parent().getBlock(Vector3i(pos.x + x , pos.y + y, pos.z + z))
+				var block = get_parent().getBlock(Vector3i(pos.x + x , pos.y + y, pos.z + z), first_load)
 				blocks[x][y].append(block)
 				#if noise.get_noise_3d(x,y,z) >  threshold:
 					#blocks[x][y].append(BlockType.DIRT)
 				#else:
 					#blocks[x][y].append(BlockType.AIR)
-		
+	
+	first_load = false
+
 func add_uvs(x,y):
 	#OLD CODE USING text_div (original was with 0.125
 	#uvs.append(Vector2(0,0))
@@ -188,6 +192,13 @@ func gen_chunk():
 		collision_shape_3d.set_shape(trimesh_collisions)
 	mesh = a_mesh
 	
+func setBlock(local_pos: Vector3i, block_type: Block.BlockType):
+	blocks[local_pos.x][local_pos.y][local_pos.z] = block_type
+
+func getBlock(local_pos:Vector3i):
+	return blocks[local_pos.x][local_pos.y][local_pos.z]
+	
+
 func block_is_air(pos:Vector3):
 	if pos.x < 0 or pos.y < 0 or pos.z < 0:
 		#return true (para dibujar todo el chunk)
